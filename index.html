@@ -1,0 +1,2040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daily Grind Media — Authority System Proposal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Barlow+Condensed:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;1,300;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #080808;
+      --card: #111111;
+      --border: #1E1E1E;
+      --border-mid: #2A2A2A;
+      --copper: #BB725A;
+      --copper-light: #D4937D;
+      --copper-dark: #8A4F3B;
+      --white: #F5F3F0;
+      --muted: #777777;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-body: 'Barlow', sans-serif;
+      --font-condensed: 'Barlow Condensed', sans-serif;
+      --font-serif: 'Cormorant Garamond', serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--black);
+      color: var(--white);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.7;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── GRAIN OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      pointer-events: none;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+    }
+
+    /* ── LAYOUT ── */
+    .container {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    section { padding: 100px 0; }
+
+    /* ── DIVIDERS ── */
+    .copper-rule {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--copper), transparent);
+      opacity: 0.4;
+    }
+
+    .copper-rule-short {
+      width: 48px;
+      height: 1px;
+      background: var(--copper);
+      margin-bottom: 32px;
+    }
+
+    /* ── EYEBROW ── */
+    .eyebrow {
+      font-family: var(--font-condensed);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.42em;
+      text-transform: uppercase;
+      color: var(--copper);
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    /* ── HEADINGS ── */
+    h1, h2, h3 {
+      font-family: var(--font-display);
+      letter-spacing: 0.03em;
+      line-height: 0.95;
+    }
+
+    h1 { font-size: clamp(52px, 8vw, 96px); }
+    h2 { font-size: clamp(40px, 6vw, 72px); }
+    h3 { font-size: clamp(28px, 4vw, 44px); }
+
+    /* ────────────────────────────────────────
+       HEADER — Typography-only brand lockup
+    ──────────────────────────────────────── */
+    .site-header {
+      padding: 72px 0 52px;
+      text-align: center;
+      position: relative;
+    }
+
+    .brand-lockup {
+      display: inline-block;
+      position: relative;
+      margin-bottom: 28px;
+    }
+
+    .brand-lockup::before {
+      content: '';
+      position: absolute;
+      inset: -60px -80px;
+      background: radial-gradient(ellipse at center, rgba(187,114,90,0.12) 0%, transparent 68%);
+      pointer-events: none;
+      animation: logoGlow 5s ease-in-out infinite alternate;
+    }
+
+    @keyframes logoGlow {
+      from { opacity: 0.5; transform: scale(0.96); }
+      to   { opacity: 1;   transform: scale(1.04); }
+    }
+
+    .brand-name {
+      font-family: var(--font-display);
+      font-size: clamp(36px, 6vw, 64px);
+      letter-spacing: 0.22em;
+      color: var(--copper);
+      display: block;
+      position: relative;
+      z-index: 1;
+      line-height: 1;
+    }
+
+    .brand-rule {
+      display: block;
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--copper), transparent);
+      opacity: 0.55;
+      margin-top: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header-eyebrow {
+      font-family: var(--font-condensed);
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.42em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 80px 0 100px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      margin-bottom: 40px;
+      background: linear-gradient(180deg, #F5F3F0 60%, rgba(245,243,240,0.5) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-body {
+      max-width: 600px;
+      margin: 0 auto;
+      font-family: var(--font-body);
+      font-size: 17px;
+      font-weight: 300;
+      color: #999;
+      line-height: 1.9;
+      letter-spacing: 0.01em;
+    }
+
+    .hero-body p + p { margin-top: 20px; }
+
+    /* ────────────────────────────────────────
+       WHY IT WORKS — Cards
+    ──────────────────────────────────────── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .card {
+      background: var(--card);
+      padding: 40px 36px;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.3s ease;
+    }
+
+    .card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--copper), transparent);
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+
+    .card:hover { background: #151515; }
+    .card:hover::after { opacity: 1; }
+
+    .card-index {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 13px;
+      color: var(--copper);
+      letter-spacing: 0.06em;
+      display: block;
+      margin-bottom: 20px;
+      opacity: 0.8;
+    }
+
+    .card-title {
+      font-family: var(--font-display);
+      font-size: 22px;
+      letter-spacing: 0.04em;
+      margin-bottom: 12px;
+      color: var(--white);
+    }
+
+    .card-body {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 300;
+      color: #7A7A7A;
+      line-height: 1.85;
+      letter-spacing: 0.01em;
+    }
+
+    /* ── SECTION HEADING ── */
+    .section-heading { margin-bottom: 60px; }
+
+    .section-heading h2 {
+      background: linear-gradient(180deg, #F5F3F0 60%, rgba(245,243,240,0.4) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ── CONTENT ECOSYSTEM ── */
+    .ecosystem {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 60px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ecosystem::after {
+      content: '';
+      position: absolute;
+      bottom: -100px; right: -100px;
+      width: 340px; height: 340px;
+      background: radial-gradient(circle, rgba(187,114,90,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .ecosystem-center {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .episode-badge {
+      display: inline-block;
+      border: 1px solid var(--copper);
+      padding: 18px 40px;
+      font-family: var(--font-display);
+      font-size: 26px;
+      letter-spacing: 0.1em;
+      color: var(--copper);
+      margin-bottom: 10px;
+    }
+
+    .episode-label {
+      font-family: var(--font-condensed);
+      font-size: 9px;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: block;
+    }
+
+    .ecosystem-arrow {
+      color: var(--copper);
+      font-size: 18px;
+      display: block;
+      margin: 18px 0;
+      opacity: 0.45;
+      font-family: var(--font-serif);
+    }
+
+    .ecosystem-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1px;
+      background: var(--border);
+    }
+
+    .ecosystem-item {
+      background: #0E0E0E;
+      padding: 22px 24px;
+      transition: background 0.25s ease;
+    }
+
+    .ecosystem-item:hover { background: #161616; }
+
+    .ecosystem-item-label {
+      font-family: var(--font-condensed);
+      font-size: 9px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--copper);
+      margin-bottom: 6px;
+      display: block;
+      opacity: 0.7;
+    }
+
+    .ecosystem-item-title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      letter-spacing: 0.04em;
+      color: var(--white);
+    }
+
+    /* ── PACKAGES ── */
+    .packages-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 680px) {
+      .packages-grid { grid-template-columns: 1fr; }
+    }
+
+    .package-card {
+      border: 1px solid var(--border-mid);
+      padding: 52px 44px;
+      position: relative;
+      background: var(--card);
+      transition: border-color 0.35s ease;
+    }
+
+    .package-card:hover { border-color: rgba(187,114,90,0.25); }
+    .package-card.featured { border-color: rgba(187,114,90,0.5); }
+
+    .package-card.featured::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      background: linear-gradient(145deg, rgba(187,114,90,0.08) 0%, transparent 55%);
+      pointer-events: none;
+    }
+
+    .popular-badge {
+      display: block;
+      font-family: var(--font-condensed);
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+      color: var(--copper);
+      margin-bottom: 28px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid rgba(187,114,90,0.2);
+    }
+
+    .package-number {
+      font-family: var(--font-condensed);
+      font-size: 9px;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 14px;
+      display: block;
+    }
+
+    .package-name {
+      font-family: var(--font-display);
+      font-size: 30px;
+      letter-spacing: 0.04em;
+      color: var(--white);
+      line-height: 1.05;
+    }
+
+    .package-price {
+      font-family: var(--font-display);
+      font-size: 68px;
+      letter-spacing: 0.01em;
+      color: var(--copper);
+      line-height: 1;
+      margin: 28px 0;
+    }
+
+    .package-price span {
+      font-family: var(--font-condensed);
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .package-divider {
+      height: 1px;
+      background: var(--border-mid);
+      margin: 28px 0;
+    }
+
+    .package-includes {
+      font-family: var(--font-condensed);
+      font-size: 9px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 22px;
+      display: block;
+    }
+
+    .package-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .package-list li {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 300;
+      color: #999;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      line-height: 1.6;
+      letter-spacing: 0.01em;
+    }
+
+    .package-list li::before {
+      content: '—';
+      color: rgba(187,114,90,0.5);
+      font-size: 11px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .package-note {
+      margin-top: 30px;
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 15px;
+      color: #666;
+      line-height: 1.8;
+    }
+
+    /* ── CONTENT ENGINE ── */
+    .engine-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: start;
+    }
+
+    @media (max-width: 700px) {
+      .engine-grid { grid-template-columns: 1fr; gap: 40px; }
+    }
+
+    .engine-topics { display: flex; flex-direction: column; gap: 2px; }
+
+    /* Engine topic rows with icon */
+    .engine-topic {
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      font-family: var(--font-body);
+      font-size: 13.5px;
+      font-weight: 300;
+      color: #888;
+      letter-spacing: 0.02em;
+      transition: border-color 0.25s, color 0.25s, background 0.25s;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .engine-topic:hover {
+      border-color: rgba(187,114,90,0.3);
+      color: var(--white);
+      background: #141414;
+    }
+
+    .engine-topic:hover .et-icon { opacity: 1; }
+
+    .et-icon {
+      flex-shrink: 0;
+      width: 16px;
+      height: 16px;
+      color: var(--copper);
+      opacity: 0.55;
+      transition: opacity 0.25s;
+    }
+
+    .engine-copy {
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 300;
+      color: #888;
+      line-height: 1.95;
+      letter-spacing: 0.01em;
+    }
+
+    .engine-copy p + p { margin-top: 20px; }
+
+    .engine-copy strong {
+      color: #C8C4BE;
+      font-weight: 400;
+    }
+
+    /* ────────────────────────────────────────
+       IDEAL TOPICS — Roman numeral editorial tiles
+    ──────────────────────────────────────── */
+    .topic-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .topic-tile {
+      background: var(--card);
+      padding: 28px 24px 26px;
+      transition: background 0.25s ease;
+      cursor: default;
+    }
+
+    .topic-tile:hover { background: #161616; }
+    .topic-tile:hover .topic-numeral { opacity: 1; }
+
+    .topic-numeral {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 11px;
+      color: var(--copper);
+      display: block;
+      margin-bottom: 12px;
+      letter-spacing: 0.05em;
+      opacity: 0.55;
+      transition: opacity 0.25s ease;
+    }
+
+    .topic-tile-name {
+      font-family: var(--font-display);
+      font-size: 17px;
+      letter-spacing: 0.04em;
+      color: var(--white);
+      line-height: 1.2;
+    }
+
+    /* ── CLOSING ── */
+    .closing {
+      text-align: center;
+      padding: 100px 0 80px;
+    }
+
+    .closing-copy {
+      max-width: 580px;
+      margin: 0 auto 64px;
+      font-family: var(--font-serif);
+      font-size: 21px;
+      font-weight: 300;
+      font-style: italic;
+      color: #888;
+      line-height: 1.9;
+    }
+
+    .closing-lockup {
+      display: inline-block;
+      padding: 30px 52px;
+      position: relative;
+    }
+
+    .closing-lockup::before,
+    .closing-lockup::after {
+      content: '';
+      position: absolute;
+      width: 14px; height: 14px;
+      border-color: rgba(187,114,90,0.5);
+      border-style: solid;
+    }
+
+    .closing-lockup::before {
+      top: 0; left: 0;
+      border-width: 1px 0 0 1px;
+    }
+
+    .closing-lockup::after {
+      bottom: 0; right: 0;
+      border-width: 0 1px 1px 0;
+    }
+
+    .corner-tr {
+      position: absolute;
+      top: 0; right: 0;
+      width: 14px; height: 14px;
+      border-top: 1px solid rgba(187,114,90,0.5);
+      border-right: 1px solid rgba(187,114,90,0.5);
+    }
+
+    .corner-bl {
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 14px; height: 14px;
+      border-bottom: 1px solid rgba(187,114,90,0.5);
+      border-left: 1px solid rgba(187,114,90,0.5);
+    }
+
+    .closing-lockup-text {
+      font-family: var(--font-condensed);
+      font-size: 9px;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    .closing-lockup-sub {
+      font-family: var(--font-display);
+      font-size: 30px;
+      letter-spacing: 0.1em;
+      color: var(--white);
+      margin-top: 6px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 36px 0 40px;
+      text-align: center;
+    }
+
+    .footer-wordmark {
+      font-family: var(--font-display);
+      font-size: 13px;
+      letter-spacing: 0.3em;
+      color: rgba(187,114,90,0.35);
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .footer-copy {
+      font-family: var(--font-condensed);
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.12);
+    }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      section { padding: 70px 0; }
+      .container { padding: 0 20px; }
+      .ecosystem { padding: 36px 24px; }
+      .package-card { padding: 36px 28px; }
+      .engine-topics { flex-direction: column; }
+      .topic-grid { grid-template-columns: repeat(2, 1fr); }
+      .closing-lockup { padding: 24px 36px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+      .brand-lockup::before { animation: none; }
+    }
+
+    /* ────────────────────────────────────────
+       AUTHORITY LADDER SECTION
+    ──────────────────────────────────────── */
+
+    .ladder-intro {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 19px;
+      color: #777;
+      max-width: 540px;
+      line-height: 1.85;
+      margin-bottom: 64px;
+    }
+
+    /* Connector spine */
+    .ladder-wrap {
+      position: relative;
+    }
+
+    .ladder-wrap::before {
+      content: '';
+      position: absolute;
+      left: 30px;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: linear-gradient(180deg, var(--copper) 0%, rgba(187,114,90,0.15) 100%);
+      opacity: 0.3;
+    }
+
+    .ladder-level {
+      display: grid;
+      grid-template-columns: 60px 1fr;
+      gap: 0 32px;
+      margin-bottom: 8px;
+      position: relative;
+    }
+
+    /* Arrow connector between levels */
+    .ladder-arrow {
+      display: grid;
+      grid-template-columns: 60px 1fr;
+      gap: 0 32px;
+      align-items: center;
+      margin-bottom: 8px;
+      height: 36px;
+    }
+
+    .ladder-arrow-spine {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .ladder-arrow-mark {
+      color: var(--copper);
+      font-size: 16px;
+      opacity: 0.4;
+      font-family: var(--font-serif);
+    }
+
+    .ladder-arrow-label {
+      font-family: var(--font-condensed);
+      font-size: 9px;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: #444;
+      padding-left: 2px;
+    }
+
+    /* Level number bubble */
+    .ladder-level-num {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 36px;
+    }
+
+    .level-badge {
+      width: 60px;
+      height: 60px;
+      border: 1px solid rgba(187,114,90,0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      flex-shrink: 0;
+      position: relative;
+      background: #0D0D0D;
+    }
+
+    .level-badge-roman {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 18px;
+      color: var(--copper);
+      line-height: 1;
+      display: block;
+    }
+
+    .level-badge-word {
+      font-family: var(--font-condensed);
+      font-size: 7px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(187,114,90,0.5);
+      display: block;
+      margin-top: 2px;
+    }
+
+    /* Level card */
+    .ladder-card {
+      border: 1px solid var(--border-mid);
+      background: var(--card);
+      padding: 36px 40px;
+      transition: border-color 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ladder-card:hover { border-color: rgba(187,114,90,0.25); }
+
+    .ladder-card.anchor { border-color: rgba(187,114,90,0.45); }
+    .ladder-card.anchor::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      background: linear-gradient(135deg, rgba(187,114,90,0.07) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .ladder-card-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+
+    .ladder-level-label {
+      font-family: var(--font-condensed);
+      font-size: 9px;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+      color: var(--copper);
+      opacity: 0.7;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .ladder-title {
+      font-family: var(--font-display);
+      font-size: 28px;
+      letter-spacing: 0.04em;
+      color: var(--white);
+      line-height: 1;
+    }
+
+    .ladder-price {
+      font-family: var(--font-display);
+      font-size: 36px;
+      letter-spacing: 0.02em;
+      color: var(--copper);
+      white-space: nowrap;
+      line-height: 1;
+    }
+
+    .ladder-price sub {
+      font-family: var(--font-condensed);
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      vertical-align: baseline;
+      bottom: 0;
+    }
+
+    .ladder-price-note {
+      font-family: var(--font-condensed);
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #555;
+      margin-top: 3px;
+      display: block;
+    }
+
+    .ladder-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 22px 0;
+    }
+
+    .ladder-includes-label {
+      font-family: var(--font-condensed);
+      font-size: 9px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 16px;
+    }
+
+    .ladder-list {
+      list-style: none;
+      padding: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+
+    .ladder-list.single-col {
+      grid-template-columns: 1fr;
+    }
+
+    .ladder-list li {
+      font-family: var(--font-body);
+      font-size: 13.5px;
+      font-weight: 300;
+      color: #888;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      line-height: 1.5;
+      letter-spacing: 0.01em;
+    }
+
+    .ladder-list li::before {
+      content: '—';
+      color: rgba(187,114,90,0.4);
+      font-size: 10px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .ladder-outcome {
+      margin-top: 24px;
+      padding: 18px 20px;
+      border-left: 1px solid rgba(187,114,90,0.35);
+      background: rgba(187,114,90,0.03);
+    }
+
+    .ladder-outcome-label {
+      font-family: var(--font-condensed);
+      font-size: 8px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--copper);
+      opacity: 0.6;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .ladder-outcome-text {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 300;
+      color: #999;
+      line-height: 1.75;
+      letter-spacing: 0.01em;
+    }
+
+    .ladder-caveat {
+      margin-top: 14px;
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 13px;
+      color: #555;
+      line-height: 1.7;
+    }
+
+    /* Platforms row */
+    .ladder-platforms {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .platform-tag {
+      font-family: var(--font-condensed);
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #666;
+      border: 1px solid #222;
+      padding: 4px 10px;
+    }
+
+    /* Positioning note between levels */
+    .ladder-positioning {
+      max-width: 600px;
+      margin: 52px auto 0;
+      text-align: center;
+      padding: 32px;
+      border: 1px solid #1A1A1A;
+      position: relative;
+    }
+
+    .ladder-positioning::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(187,114,90,0.3), transparent);
+    }
+
+    .ladder-positioning p {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 300;
+      color: #777;
+      line-height: 1.9;
+      letter-spacing: 0.01em;
+    }
+
+    .ladder-positioning p + p { margin-top: 12px; }
+
+    .ladder-positioning strong {
+      color: #AAA;
+      font-weight: 400;
+    }
+
+    /* ── FLYWHEEL ── */
+    .flywheel-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+    }
+
+    @media (max-width: 700px) {
+      .flywheel-wrap { grid-template-columns: 1fr; }
+      .ladder-list { grid-template-columns: 1fr; }
+      .ladder-level { grid-template-columns: 1fr; }
+      .ladder-level-num { display: none; }
+      .ladder-arrow { display: none; }
+      .ladder-wrap::before { display: none; }
+    }
+
+    .flywheel-copy {
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 300;
+      color: #888;
+      line-height: 1.95;
+      letter-spacing: 0.01em;
+    }
+
+    .flywheel-copy p + p { margin-top: 16px; }
+
+    .flywheel-copy strong {
+      color: #C8C4BE;
+      font-weight: 400;
+    }
+
+    /* ── NEW: Ladder intro block ── */
+    .ladder-intro-block {
+      margin-bottom: 64px;
+      max-width: 560px;
+    }
+
+    .ladder-intro {
+      font-family: var(--font-display);
+      font-size: 32px;
+      letter-spacing: 0.06em;
+      color: var(--white);
+      line-height: 1;
+      display: block;
+    }
+
+    .ladder-intro-em {
+      font-family: var(--font-display);
+      font-size: 32px;
+      letter-spacing: 0.06em;
+      color: var(--copper);
+      line-height: 1;
+      display: block;
+      margin-bottom: 20px;
+    }
+
+    .ladder-intro-sub {
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 300;
+      color: #777;
+      line-height: 1.9;
+      letter-spacing: 0.01em;
+    }
+
+    /* ── NEW: Authority statement above deliverables ── */
+    .ladder-authority-statement {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 14.5px;
+      color: #888;
+      line-height: 1.8;
+      padding: 16px 20px;
+      border-left: 1px solid rgba(187,114,90,0.3);
+      background: rgba(187,114,90,0.025);
+      margin-bottom: 4px;
+    }
+
+    /* ── NEW: Level 2 positioning sub-line ── */
+    .ladder-positioning-sub {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 15px;
+      color: #888;
+      line-height: 1.7;
+      margin-top: 10px;
+    }
+
+    /* ── NEW: Deliverable group labels ── */
+    .ladder-group-label {
+      display: block;
+      font-family: var(--font-condensed);
+      font-size: 9px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--copper);
+      opacity: 0.65;
+      margin-top: 22px;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(187,114,90,0.15);
+    }
+
+    .ladder-group-gap { height: 8px; }
+
+    /* ── NEW: Copper emphasis inline ── */
+    .copper-em {
+      color: var(--copper);
+      font-weight: 400;
+    }
+
+    /* ── NEW: Flywheel lead paragraph ── */
+    .flywheel-lead {
+      font-family: var(--font-body);
+      font-size: 18px;
+      font-weight: 300;
+      color: #C8C4BE;
+      line-height: 1.6;
+      letter-spacing: 0.01em;
+      margin-bottom: 0;
+    }
+
+    /* ── NEW: Flywheel axiom pull-quote ── */
+    .flywheel-axiom {
+      margin-top: 28px;
+      padding: 16px 20px;
+      border-left: 1px solid rgba(187,114,90,0.4);
+      display: flex;
+      gap: 14px;
+      align-items: baseline;
+    }
+
+    .flywheel-axiom-mark {
+      color: var(--copper);
+      font-size: 14px;
+      flex-shrink: 0;
+      opacity: 0.6;
+    }
+
+    .flywheel-axiom-text {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 16px;
+      color: #999;
+      line-height: 1.7;
+    }
+
+    /* ── NEW: Positioning note headline ── */
+    .ladder-pos-headline {
+      font-family: var(--font-display);
+      font-size: 22px;
+      letter-spacing: 0.06em;
+      color: var(--white);
+      margin-bottom: 14px;
+      display: block;
+    }
+
+    /* ── NEW: CRM Centralization Callout ── */
+    .crm-callout {
+      margin-top: 24px;
+      border: 1px solid rgba(187,114,90,0.2);
+      background: rgba(187,114,90,0.025);
+      padding: 24px 24px 20px;
+      position: relative;
+    }
+
+    .crm-callout::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(187,114,90,0.5), transparent);
+    }
+
+    .crm-callout-label {
+      display: block;
+      font-family: var(--font-condensed);
+      font-size: 9px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--copper);
+      margin-bottom: 12px;
+    }
+
+    .crm-callout-body {
+      font-family: var(--font-body);
+      font-size: 13.5px;
+      font-weight: 300;
+      color: #999;
+      line-height: 1.8;
+      letter-spacing: 0.01em;
+      margin-bottom: 16px;
+    }
+
+    .crm-platform-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+
+    .crm-platform-pill {
+      font-family: var(--font-condensed);
+      font-size: 8.5px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #BB725A;
+      border: 1px solid rgba(187,114,90,0.25);
+      padding: 4px 10px;
+    }
+
+    .crm-callout-note {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 13px;
+      color: #666;
+      line-height: 1.75;
+    }
+
+    /* ── Flywheel ring larger on mobile ── */
+    .flywheel-ring {
+      position: relative;
+      width: 100%;
+      max-width: 420px;
+      margin: 0 auto;
+      aspect-ratio: 1;
+      overflow: visible;
+    }
+
+    .flywheel-ring svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="container">
+      <div class="brand-lockup reveal">
+        <span class="brand-name">Daily Grind Media</span>
+        <span class="brand-rule"></span>
+      </div>
+      <p class="header-eyebrow reveal reveal-delay-1">Podcast Production &amp; Authority System</p>
+    </div>
+  </header>
+
+  <div class="copper-rule"></div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <span class="eyebrow reveal">Authority Building</span>
+      <h1 class="reveal reveal-delay-1">Turn One<br/>Conversation<br/>Into Lasting<br/>Authority</h1>
+      <div class="hero-body reveal reveal-delay-2">
+        <p>One of the biggest challenges for most experts isn't a lack of knowledge.</p>
+        <p>It's consistently documenting that expertise while managing clients, business development, sales, and day-to-day operations.</p>
+        <p>A monthly podcast creates a structured system to capture your intellectual property, build thought leadership, and generate long-term authority assets that compound across every major platform.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="copper-rule"></div>
+
+  <!-- WHY PODCAST CONTENT WORKS -->
+  <section>
+    <div class="container">
+      <div class="section-heading reveal">
+        <span class="eyebrow">The Value</span>
+        <h2>Why Podcast<br/>Authority Works</h2>
+      </div>
+      <div class="cards-grid reveal reveal-delay-1">
+
+        <div class="card">
+          <span class="card-index">I</span>
+          <p class="card-title">Builds Trust Faster</p>
+          <p class="card-body">Long-form audio and video allow potential clients to spend real time with you — building a relationship before they ever reach out.</p>
+        </div>
+
+        <div class="card">
+          <span class="card-index">II</span>
+          <p class="card-title">Reveals Your Thinking</p>
+          <p class="card-body">People work with experts they trust. A podcast gives potential clients genuine insight into how you think, lead, and solve problems — before the first conversation.</p>
+        </div>
+
+        <div class="card">
+          <span class="card-index">III</span>
+          <p class="card-title">Establishes Authority</p>
+          <p class="card-body">Consistently sharing perspective and expertise positions you as a credible voice in your industry — not just another option in the market.</p>
+        </div>
+
+        <div class="card">
+          <span class="card-index">IV</span>
+          <p class="card-title">Long-Term Authority Assets</p>
+          <p class="card-body">Unlike social posts that disappear in hours, a podcast episode is a permanent intellectual property asset — continuing to build authority months and years after it's published.</p>
+        </div>
+
+        <div class="card">
+          <span class="card-index">V</span>
+          <p class="card-title">Philosophy on Display</p>
+          <p class="card-body">Your approach, frameworks, and values become visible — attracting clients who are already aligned with the way you work before they ever reach out.</p>
+        </div>
+
+        <div class="card">
+          <span class="card-index">VI</span>
+          <p class="card-title">Differentiation</p>
+          <p class="card-body">Most experts compete on credentials. A podcast shifts the conversation to perspective, process, and identity — making direct comparison difficult.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="copper-rule"></div>
+
+  <!-- CONTENT ECOSYSTEM -->
+  <section>
+    <div class="container">
+      <div class="section-heading reveal">
+        <span class="eyebrow">The System</span>
+        <h2>One Session.<br/>An Entire<br/>Authority<br/>Ecosystem.</h2>
+      </div>
+
+      <div class="ecosystem reveal reveal-delay-1">
+        <div class="ecosystem-center">
+          <div class="episode-badge">1 Podcast Episode</div>
+          <p class="episode-label">One recording session. One authority asset.</p>
+          <span class="ecosystem-arrow">↓</span>
+        </div>
+
+        <div class="ecosystem-grid">
+          <div class="ecosystem-item">
+            <span class="ecosystem-item-label">Video</span>
+            <p class="ecosystem-item-title">5 Talking Head Reels</p>
+          </div>
+          <div class="ecosystem-item">
+            <span class="ecosystem-item-label">Education</span>
+            <p class="ecosystem-item-title">Educational Content</p>
+          </div>
+          <div class="ecosystem-item">
+            <span class="ecosystem-item-label">Relationship</span>
+            <p class="ecosystem-item-title">Client Trust Building</p>
+          </div>
+          <div class="ecosystem-item">
+            <span class="ecosystem-item-label">Positioning</span>
+            <p class="ecosystem-item-title">Authority Content</p>
+          </div>
+          <div class="ecosystem-item">
+            <span class="ecosystem-item-label">Distribution</span>
+            <p class="ecosystem-item-title">Social Media Content</p>
+          </div>
+          <div class="ecosystem-item">
+            <span class="ecosystem-item-label">Depth</span>
+            <p class="ecosystem-item-title">Long-Form Content</p>
+          </div>
+          <div class="ecosystem-item">
+            <span class="ecosystem-item-label">Growth</span>
+            <p class="ecosystem-item-title">Future Content Ideas</p>
+          </div>
+          <div class="ecosystem-item">
+            <span class="ecosystem-item-label">Archive</span>
+            <p class="ecosystem-item-title">Permanent Platform Asset</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="copper-rule"></div>
+
+  <!-- PACKAGES -->
+  <section>
+    <div class="container">
+      <div class="section-heading reveal">
+        <span class="eyebrow">Investment</span>
+        <h2>The Packages</h2>
+      </div>
+
+      <div class="packages-grid">
+
+        <div class="package-card reveal">
+          <span class="package-number">Step 01 — Entry Point</span>
+          <p class="package-name">Podcast<br/>Production</p>
+          <div class="package-price">$750<span>&nbsp;/ session</span></div>
+          <div class="package-divider"></div>
+          <span class="package-includes">What's included</span>
+          <ul class="package-list">
+            <li>Up to 60-minute recording session</li>
+            <li>Professional video recording</li>
+            <li>Professional audio recording</li>
+            <li>Audio mastering</li>
+            <li>Professional color grading</li>
+            <li>Fully edited podcast episode</li>
+            <li>Video delivery</li>
+            <li>Audio-only delivery</li>
+            <li>Ready for YouTube, Spotify, Apple Podcasts, and social distribution</li>
+          </ul>
+          <p class="package-note">The entry point into the ecosystem. We professionally capture your expertise and produce a high-quality podcast episode — your foundational authority asset.</p>
+        </div>
+
+        <div class="package-card featured reveal reveal-delay-1">
+          <span class="popular-badge">Recommended</span>
+          <span class="package-number">Step 02 — Full System</span>
+          <p class="package-name">Podcast + Authority<br/>System</p>
+          <div class="package-price">$2,500<span>&nbsp;/ session</span></div>
+          <div class="package-divider"></div>
+          <span class="package-includes">Everything in Step 01, plus</span>
+          <ul class="package-list">
+            <li>Premium Authority Blueprint</li>
+            <li>Master Knowledge Extraction</li>
+            <li>Monthly Content Calendar</li>
+            <li>Market &amp; Content Research</li>
+            <li>Content Strategy</li>
+            <li>Content Pillars</li>
+            <li>Hook Library</li>
+            <li>CTA Library</li>
+            <li>Reel Ideas</li>
+            <li>10 LinkedIn Posts</li>
+            <li>10 Facebook Posts</li>
+            <li>5 Twitter/X Threads</li>
+            <li>4 Email Campaigns</li>
+            <li>4 SEO Blog Article Drafts</li>
+            <li>4 Static Ad Concepts</li>
+            <li>Story Content Ideas</li>
+            <li>Future Podcast Topic Recommendations</li>
+          </ul>
+          <p class="package-note">The podcast is no longer the final deliverable — it becomes the foundation. We record your expertise, extract it, and transform it into a complete authority ecosystem distributed across every major platform.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="copper-rule"></div>
+
+  <!-- AUTHORITY LADDER -->
+  <section>
+    <div class="container">
+
+      <div class="section-heading reveal">
+        <span class="eyebrow">The Growth Path</span>
+        <h2>The Daily Grind<br/>Media Authority<br/>Ladder</h2>
+      </div>
+
+      <div class="ladder-intro-block reveal reveal-delay-1">
+        <p class="ladder-intro">Record your expertise.</p>
+        <p class="ladder-intro-em">Extract it. Build authority. Convert attention into clients.</p>
+        <p class="ladder-intro-sub">Each level is designed to work independently — and compound when combined. Start with production. Expand into the full authority system when ready.</p>
+      </div>
+
+      <div class="ladder-wrap">
+
+        <!-- LEVEL 1 -->
+        <div class="ladder-level reveal">
+          <div class="ladder-level-num">
+            <div class="level-badge">
+              <span class="level-badge-roman">I</span>
+              <span class="level-badge-word">Level</span>
+            </div>
+          </div>
+          <div class="ladder-card anchor">
+            <span class="ladder-level-label">Level 1 — $750 / session</span>
+            <div class="ladder-card-header">
+              <p class="ladder-title">Podcast Production</p>
+            </div>
+            <p class="ladder-positioning-sub">Professionally capture your expertise and produce a high-quality podcast episode — your foundational authority asset, ready for every major platform.</p>
+            <div class="ladder-outcome">
+              <span class="ladder-outcome-label">Outcome</span>
+              <p class="ladder-outcome-text">One recording session becomes your <em>foundational authority asset</em> — a professionally produced podcast episode ready for YouTube, Spotify, Apple Podcasts, and social distribution.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ARROW -->
+        <div class="ladder-arrow reveal">
+          <div class="ladder-arrow-spine"><span class="ladder-arrow-mark">↓</span></div>
+          <span class="ladder-arrow-label">Natural next step</span>
+        </div>
+
+        <!-- LEVEL 2 -->
+        <div class="ladder-level reveal">
+          <div class="ladder-level-num">
+            <div class="level-badge">
+              <span class="level-badge-roman">II</span>
+              <span class="level-badge-word">Level</span>
+            </div>
+          </div>
+          <div class="ladder-card">
+            <span class="ladder-level-label">Level 2 — $2,500 / session</span>
+            <div class="ladder-card-header">
+              <p class="ladder-title">Podcast + Authority System</p>
+            </div>
+            <p class="ladder-positioning-sub">The podcast becomes the foundation. Every session is analyzed and transformed into a structured knowledge base that powers an entire month of strategic authority content.</p>
+
+            <div class="ladder-authority-statement">
+              Record your expertise. Extract it. Transform it into a complete authority ecosystem — distributed across every platform your audience lives on.
+            </div>
+
+            <div class="ladder-divider"></div>
+
+            <span class="ladder-group-label">Strategy Foundation</span>
+            <ul class="ladder-list single-col">
+              <li>Premium Authority Blueprint</li>
+              <li>Master Knowledge Extraction</li>
+              <li>Monthly Content Calendar</li>
+              <li>Market &amp; Content Research</li>
+              <li>Content Strategy &amp; Content Pillars</li>
+              <li>Hook Library &amp; CTA Library</li>
+              <li>Reel Ideas &amp; Story Content Ideas</li>
+              <li>Future Podcast Topic Recommendations</li>
+            </ul>
+
+            <div class="ladder-group-gap"></div>
+
+            <span class="ladder-group-label">Monthly Authority Deliverables</span>
+            <ul class="ladder-list">
+              <li>10 LinkedIn Posts</li>
+              <li>10 Facebook Posts</li>
+              <li>5 Twitter/X Threads</li>
+              <li>4 Email Campaigns</li>
+              <li>4 SEO Blog Article Drafts</li>
+              <li>4 Static Ad Concepts</li>
+            </ul>
+
+            <div class="ladder-platforms" style="margin-top:20px">
+              <span class="platform-tag">LinkedIn</span>
+              <span class="platform-tag">Instagram</span>
+              <span class="platform-tag">Facebook</span>
+              <span class="platform-tag">Twitter / X</span>
+              <span class="platform-tag">YouTube</span>
+              <span class="platform-tag">Website</span>
+              <span class="platform-tag">Email Marketing</span>
+            </div>
+            <p class="ladder-caveat">Generated from your podcast transcript. Does not include additional filming, video editing, posting, graphic design, or ad management unless added separately.</p>
+            <div class="ladder-outcome">
+              <span class="ladder-outcome-label">Outcome</span>
+              <p class="ladder-outcome-text">One conversation becomes <em>an entire month of strategic authority content</em> — across every platform your audience lives on.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ARROW -->
+        <div class="ladder-arrow reveal">
+          <div class="ladder-arrow-spine"><span class="ladder-arrow-mark">↓</span></div>
+          <span class="ladder-arrow-label">When ready</span>
+        </div>
+
+        <!-- LEVEL 3 -->
+        <div class="ladder-level reveal">
+          <div class="ladder-level-num">
+            <div class="level-badge">
+              <span class="level-badge-roman">III</span>
+              <span class="level-badge-word">Level</span>
+            </div>
+          </div>
+          <div class="ladder-card">
+            <span class="ladder-level-label">Level 3 — Optional Growth Layer</span>
+            <div class="ladder-card-header">
+              <p class="ladder-title">Client Acquisition</p>
+              <div style="text-align:right">
+                <div class="ladder-price">$2,500<sub>&nbsp;launch</sub></div>
+                <span class="ladder-price-note">$1,500 / month partnership</span>
+              </div>
+            </div>
+            <p class="ladder-positioning-sub">For those ready to convert authority and attention into a predictable, organized client acquisition channel.</p>
+            <div class="ladder-divider"></div>
+
+            <span class="ladder-group-label">Launch Investment Includes</span>
+            <ul class="ladder-list">
+              <li>CRM Implementation</li>
+              <li>Conversion Landing Page</li>
+              <li>Opportunity Pipeline</li>
+              <li>Calendar Booking</li>
+              <li>Email Automation</li>
+              <li>SMS Automation</li>
+              <li>Lead Tracking</li>
+              <li>Reporting Dashboard</li>
+              <li>Campaign Setup</li>
+              <li>Platform Integrations</li>
+              <li>Lead Capture Forms</li>
+              <li>Pipeline Configuration</li>
+            </ul>
+
+            <div class="ladder-group-gap"></div>
+
+            <span class="ladder-group-label">Monthly Growth Partnership Includes</span>
+            <ul class="ladder-list">
+              <li>Campaign Optimization</li>
+              <li>Funnel Improvements</li>
+              <li>CRM Management</li>
+              <li>Automation Maintenance</li>
+              <li>Reporting &amp; Analytics</li>
+              <li>Conversion Optimization</li>
+              <li>Strategy Refinement</li>
+              <li>Technical Support</li>
+            </ul>
+
+            <div class="crm-callout">
+              <span class="crm-callout-label">Centralized Client Acquisition Infrastructure</span>
+              <p class="crm-callout-body">Every lead channel — inbound inquiries, social conversations, website forms, email, and SMS — can be connected into one centralized system. Leads are organized, follow-ups are automated, and every opportunity is visible and tracked from first contact to closed business.</p>
+              <div class="crm-platform-row">
+                <span class="crm-platform-pill">Instagram</span>
+                <span class="crm-platform-pill">Facebook</span>
+                <span class="crm-platform-pill">Google Business</span>
+                <span class="crm-platform-pill">Website Forms</span>
+                <span class="crm-platform-pill">Email</span>
+                <span class="crm-platform-pill">SMS</span>
+                <span class="crm-platform-pill">Calendar Booking</span>
+                <span class="crm-platform-pill">CRM Pipeline</span>
+              </div>
+              <p class="crm-callout-note">The result is faster follow-up, fewer missed opportunities, and a clear view of every prospect in your pipeline — so your authority converts into measurable business growth.</p>
+            </div>
+
+            <p class="ladder-caveat">Ad spend is separate. Platforms and lead channels can be connected — this does not include automatic content posting to social platforms.</p>
+            <div class="ladder-outcome">
+              <span class="ladder-outcome-label">Outcome</span>
+              <p class="ladder-outcome-text">Your authority becomes a predictable client acquisition channel — through <em>strategic automation, intelligent follow-up, and a conversion system built to close.</em></p>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /ladder-wrap -->
+
+      <!-- Positioning note -->
+      <div class="ladder-positioning reveal">
+        <p class="ladder-pos-headline">One journey. Three stages.</p>
+        <p><strong>Capture your expertise</strong> with professional podcast production. <strong>Build authority</strong> by transforming that recording into a complete content ecosystem. When your audience is engaged and trust is established — <strong>convert that attention</strong> into organized, predictable client acquisition.</p>
+        <p>Each level works independently. Together, they form a complete business growth system.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="copper-rule"></div>
+
+  <!-- AUTHORITY FLYWHEEL -->
+  <section>
+    <div class="container">
+      <div class="section-heading reveal">
+        <span class="eyebrow">The System</span>
+        <h2>Authority<br/>Flywheel</h2>
+      </div>
+
+      <div class="flywheel-wrap">
+
+        <!-- Premium Flywheel SVG -->
+        <div class="flywheel-ring reveal">
+          <svg viewBox="0 0 420 420" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Authority Flywheel Diagram">
+            <defs>
+              <!-- Copper glow filter -->
+              <filter id="copperGlow" x="-30%" y="-30%" width="160%" height="160%">
+                <feGaussianBlur stdDeviation="3" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+              <!-- Subtle outer glow -->
+              <radialGradient id="centerGrad" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#BB725A" stop-opacity="0.12"/>
+                <stop offset="100%" stop-color="#BB725A" stop-opacity="0"/>
+              </radialGradient>
+              <!-- Arc gradient -->
+              <linearGradient id="arcGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#BB725A" stop-opacity="0.9"/>
+                <stop offset="100%" stop-color="#BB725A" stop-opacity="0.2"/>
+              </linearGradient>
+            </defs>
+
+            <!-- Background glow -->
+            <circle cx="210" cy="210" r="170" fill="url(#centerGrad)"/>
+
+            <!-- Outermost decorative ring -->
+            <circle cx="210" cy="210" r="198" stroke="#1E1E1E" stroke-width="1"/>
+
+            <!-- Main track ring -->
+            <circle cx="210" cy="210" r="164" stroke="#BB725A" stroke-width="0.75" stroke-dasharray="4 8" opacity="0.25"/>
+
+            <!-- Active arc — clockwise motion indicator (roughly 330 degrees) -->
+            <path d="M 210 46 A 164 164 0 1 1 149 59" stroke="url(#arcGrad)" stroke-width="2" fill="none" stroke-linecap="round" filter="url(#copperGlow)"/>
+
+            <!-- Arrowhead at arc end to show rotation direction -->
+            <polygon points="149,59 138,44 162,48" fill="#BB725A" opacity="0.85"/>
+
+            <!-- Inner ring -->
+            <circle cx="210" cy="210" r="70" stroke="#BB725A" stroke-width="0.75" opacity="0.3"/>
+            <circle cx="210" cy="210" r="68" stroke="#2A2A2A" stroke-width="1" fill="#0D0D0D"/>
+
+            <!-- Center label -->
+            <text x="210" y="200" text-anchor="middle" font-family="'Bebas Neue', sans-serif" font-size="11" fill="#BB725A" letter-spacing="3" opacity="0.5">AUTHORITY</text>
+            <text x="210" y="216" text-anchor="middle" font-family="'Bebas Neue', sans-serif" font-size="20" fill="#F5F3F0" letter-spacing="2">FLYWHEEL</text>
+            <text x="210" y="232" text-anchor="middle" font-family="'Barlow Condensed', sans-serif" font-size="8" fill="#BB725A" letter-spacing="3" opacity="0.6">DAILY GRIND MEDIA</text>
+
+            <!-- ── NODE GROUP MACRO: 8 nodes at r=164, starting at top (270°) going clockwise ──
+                 Node angles (clockwise from top):
+                 1. top = 270° → (210, 46)
+                 2. top-right = 315° → (326, 94)
+                 3. right = 0° → (374, 210)
+                 4. bottom-right = 45° → (326, 326)
+                 5. bottom = 90° → (210, 374)
+                 6. bottom-left = 135° → (94, 326)
+                 7. left = 180° → (46, 210)
+                 8. top-left = 225° → (94, 94)
+            -->
+
+            <!-- Node 1: Podcast Recording — TOP -->
+            <circle cx="210" cy="46" r="7" fill="#BB725A" filter="url(#copperGlow)" opacity="0.95"/>
+            <circle cx="210" cy="46" r="12" stroke="#BB725A" stroke-width="0.75" fill="none" opacity="0.3"/>
+            <text x="210" y="14" text-anchor="middle" font-family="'Bebas Neue', sans-serif" font-size="11" fill="#F5F3F0" letter-spacing="2">PODCAST</text>
+            <text x="210" y="27" text-anchor="middle" font-family="'Bebas Neue', sans-serif" font-size="11" fill="#BB725A" letter-spacing="2">RECORDING</text>
+
+            <!-- Node 2: Content Ecosystem — TOP-RIGHT -->
+            <circle cx="326" cy="94" r="6" fill="#BB725A" opacity="0.8"/>
+            <circle cx="326" cy="94" r="11" stroke="#BB725A" stroke-width="0.75" fill="none" opacity="0.25"/>
+            <text x="348" y="82" text-anchor="start" font-family="'Bebas Neue', sans-serif" font-size="11" fill="#F5F3F0" letter-spacing="2">CONTENT</text>
+            <text x="348" y="95" text-anchor="start" font-family="'Bebas Neue', sans-serif" font-size="11" fill="#D4937D" letter-spacing="2">ECOSYSTEM</text>
+
+            <!-- Node 3: Audience Growth — RIGHT -->
+            <circle cx="374" cy="210" r="6" fill="#BB725A" opacity="0.72"/>
+            <circle cx="374" cy="210" r="11" stroke="#BB725A" stroke-width="0.75" fill="none" opacity="0.22"/>
+            <text x="392" y="204" text-anchor="start" font-family="'Bebas Neue', sans-serif" font-size="11" fill="#F5F3F0" letter-spacing="2">AUDIENCE</text>
+            <text x="392" y="217" text-anchor="start" font-family="'Bebas Neue', sans-serif" font-size="11" fill="#D4937D" letter-spacing="2">GROWTH</text>
+
+            <!-- Node 4: Trust Building — BOTTOM-RIGHT -->
+            <circle cx="326" cy="326" r="6" fill="#BB725A" opacity="0.64"/>
+            <circle cx="326" cy="326" r="11" stroke="#BB725A" stroke-width="0.75" fill="none" opacity="0.2"/>
+            <text x="344" y="320" text-anchor="start" font-family="'Bebas Neue', sans-serif" font-size="11" fill="#F5F3F0" letter-spacing="2">TRUST</text>
+            <text x="344" y="333" text-anchor="start" font-family="'Bebas Neue', sans-serif" font-size="11" fill="#D4937D" letter-spacing="2">BUILDING</text>
+
+            <!-- Node 5: Lead Generation — BOTTOM -->
+            <circle cx="210" cy="374" r="6" fill="#BB725A" opacity="0.58"/>
+            <circle cx="210" cy="374" r="11" stroke="#BB725A" stroke-width="0.75" fill="none" opacity="0.18"/>
+            <text x="210" y="396" text-anchor="middle" font-family="'Bebas Neue', sans-serif" font-size="11" fill="#F5F3F0" letter-spacing="2">LEAD</text>
+            <text x="210" y="409" text-anchor="middle" font-family="'Bebas Neue', sans-serif" font-size="11" fill="#D4937D" letter-spacing="2">GENERATION</text>
+
+            <!-- Node 6: Client Stories — BOTTOM-LEFT -->
+            <circle cx="94" cy="326" r="6" fill="#BB725A" opacity="0.52"/>
+            <circle cx="94" cy="326" r="11" stroke="#BB725A" stroke-width="0.75" fill="none" opacity="0.16"/>
+            <text x="76" y="320" text-anchor="end" font-family="'Bebas Neue', sans-serif" font-size="11" fill="#F5F3F0" letter-spacing="2">CLIENT</text>
+            <text x="76" y="333" text-anchor="end" font-family="'Bebas Neue', sans-serif" font-size="11" fill="#D4937D" letter-spacing="2">STORIES</text>
+
+            <!-- Node 7: Knowledge Extraction — LEFT -->
+            <circle cx="46" cy="210" r="6" fill="#BB725A" opacity="0.48"/>
+            <circle cx="46" cy="210" r="11" stroke="#BB725A" stroke-width="0.75" fill="none" opacity="0.14"/>
+            <text x="28" y="204" text-anchor="end" font-family="'Bebas Neue', sans-serif" font-size="11" fill="#F5F3F0" letter-spacing="2">KNOWLEDGE</text>
+            <text x="28" y="217" text-anchor="end" font-family="'Bebas Neue', sans-serif" font-size="11" fill="#D4937D" letter-spacing="2">EXTRACTION</text>
+
+            <!-- Node 8: Authority Compounds — TOP-LEFT (return / completion glow) -->
+            <circle cx="94" cy="94" r="7" fill="#BB725A" filter="url(#copperGlow)" opacity="0.9"/>
+            <circle cx="94" cy="94" r="13" stroke="#BB725A" stroke-width="1" fill="none" opacity="0.35"/>
+            <text x="76" y="72" text-anchor="end" font-family="'Bebas Neue', sans-serif" font-size="11" fill="#BB725A" letter-spacing="2">AUTHORITY</text>
+            <text x="76" y="85" text-anchor="end" font-family="'Bebas Neue', sans-serif" font-size="11" fill="#BB725A" letter-spacing="2">COMPOUNDS</text>
+          </svg>
+        </div>
+
+        <div class="flywheel-copy reveal reveal-delay-1">
+          <p class="flywheel-lead">Most experts create content <span class="copper-em">reactively.</span></p>
+          <p>The Daily Grind Media Authority System creates a <span class="copper-em">repeatable process</span> — where one conversation becomes documented expertise, documented expertise builds authority, authority builds trust, and trust can turn into booked consultations over time.</p>
+          <p>Each cycle compounds. The longer the system runs, the more authority accumulates and the warmer your audience becomes before a potential client ever reaches out.</p>
+          <div class="flywheel-axiom">
+            <span class="flywheel-axiom-mark">—</span>
+            <span class="flywheel-axiom-text">One conversation. One system. Compounding authority.</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="copper-rule"></div>
+
+  <!-- CONTENT ENGINE -->
+  <section>
+    <div class="container">
+      <div class="section-heading reveal">
+        <span class="eyebrow">The Approach</span>
+        <h2>An Authority<br/>Knowledge<br/>Base</h2>
+      </div>
+
+      <div class="engine-grid">
+        <div class="engine-copy reveal">
+          <p>One monthly podcast session can power a complete thought leadership strategy built around the expertise you already hold. Stories, frameworks, market perspectives, client education, and leadership lessons are conversations you're already having with clients and peers every week.</p>
+          <p>The same applies to your <strong>case studies, frequently asked questions, sales narratives, objection handling, business philosophy, and future vision</strong> — all of it is intellectual property your audience genuinely wants access to.</p>
+          <p>Most founders and executives already possess deep expertise worth documenting. The podcast simply creates a <strong>structured system for capturing and distributing it</strong> — without requiring you to produce content from scratch or reinvent your message each month.</p>
+        </div>
+
+        <div class="engine-topics reveal reveal-delay-1">
+
+          <!-- Client Success Stories -->
+          <div class="engine-topic">
+            <svg class="et-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 12 L5 8 L8 10 L11 5 L14 7"/>
+              <path d="M12 3 h2 v2"/>
+            </svg>
+            Client Success Stories
+          </div>
+
+          <!-- Market Insights — bar chart suggestion -->
+          <div class="engine-topic">
+            <svg class="et-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="2" y1="14" x2="2" y2="6"/>
+              <rect x="1" y="6" width="3" height="8" rx="0.5"/>
+              <rect x="6" y="9" width="3" height="5" rx="0.5"/>
+              <rect x="11" y="4" width="3" height="10" rx="0.5"/>
+              <line x1="1" y1="14" x2="15" y2="14"/>
+            </svg>
+            Market Insights
+          </div>
+
+          <!-- Leadership Philosophy — compass -->
+          <div class="engine-topic">
+            <svg class="et-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="8" cy="8" r="6"/>
+              <polygon points="8,3.5 9.2,6.8 8,6.2 6.8,6.8" fill="currentColor" stroke="none" opacity="0.7"/>
+              <polygon points="8,12.5 6.8,9.2 8,9.8 9.2,9.2" fill="currentColor" stroke="none" opacity="0.3"/>
+              <circle cx="8" cy="8" r="1" fill="none"/>
+            </svg>
+            Leadership Philosophy
+          </div>
+
+          <!-- Business Lessons — briefcase -->
+          <div class="engine-topic">
+            <svg class="et-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="1.5" y="5.5" width="13" height="9" rx="1"/>
+              <path d="M5.5 5.5 V4 C5.5 3 6 2.5 7 2.5 h2 C10 2.5 10.5 3 10.5 4 V5.5"/>
+              <line x1="1.5" y1="9" x2="14.5" y2="9"/>
+            </svg>
+            Business Lessons
+          </div>
+
+          <!-- Industry Trends — line chart -->
+          <div class="engine-topic">
+            <svg class="et-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 11 L5 8 L8 9.5 L11 5 L14 6.5"/>
+              <line x1="1" y1="14" x2="15" y2="14"/>
+            </svg>
+            Industry Trends
+          </div>
+
+          <!-- Founder Story — path/journey -->
+          <div class="engine-topic">
+            <svg class="et-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="3" cy="13" r="1.2"/>
+              <circle cx="13" cy="3" r="1.2"/>
+              <path d="M3 11.8 C3 8 6 8 8 8 C10 8 13 8 13 4.2"/>
+            </svg>
+            Founder Story
+          </div>
+
+          <!-- Frequently Asked Questions — speech bubble -->
+          <div class="engine-topic">
+            <svg class="et-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 2.5 h12 a1 1 0 0 1 1 1 v6 a1 1 0 0 1-1 1 H6 L3 13 V10.5 H2 a1 1 0 0 1-1-1 v-6 a1 1 0 0 1 1-1z"/>
+              <line x1="5" y1="6" x2="11" y2="6"/>
+              <line x1="5" y1="8.2" x2="9" y2="8.2"/>
+            </svg>
+            Frequently Asked Questions
+          </div>
+
+          <!-- Process & Methodology — layers -->
+          <div class="engine-topic">
+            <svg class="et-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 5 L8 2 L14 5 L8 8 Z"/>
+              <path d="M2 9 L8 6 L14 9 L8 12 Z" opacity="0.6"/>
+              <path d="M2 13 L8 10 L14 13" opacity="0.35"/>
+            </svg>
+            Process &amp; Methodology
+          </div>
+
+          <!-- Community Expertise — linked circles -->
+          <div class="engine-topic">
+            <svg class="et-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="4" cy="8" r="2.5"/>
+              <circle cx="12" cy="5" r="2.5"/>
+              <circle cx="12" cy="11" r="2.5"/>
+              <line x1="6.4" y1="7.1" x2="9.6" y2="5.9"/>
+              <line x1="6.4" y1="8.9" x2="9.6" y2="10.1"/>
+            </svg>
+            Community Expertise
+          </div>
+
+          <!-- Future Vision — telescope / horizon -->
+          <div class="engine-topic">
+            <svg class="et-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="10" cy="6" r="3.5"/>
+              <line x1="7.5" y1="8.5" x2="3" y2="13"/>
+              <line x1="6.8" y1="9.2" x2="2" y2="14"/>
+              <line x1="13" y1="3" x2="14.5" y2="1.5"/>
+            </svg>
+            Future Vision
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="copper-rule"></div>
+
+  <!-- IDEAL TOPICS GRID -->
+  <section>
+    <div class="container">
+      <div class="section-heading reveal">
+        <span class="eyebrow">Starting Points</span>
+        <h2>Ideal Podcast<br/>Topics</h2>
+      </div>
+
+      <div class="topic-grid">
+        <div class="topic-tile reveal">
+          <span class="topic-numeral">I</span>
+          <p class="topic-tile-name">Founder Story</p>
+        </div>
+        <div class="topic-tile reveal reveal-delay-1">
+          <span class="topic-numeral">II</span>
+          <p class="topic-tile-name">Market Insights</p>
+        </div>
+        <div class="topic-tile reveal reveal-delay-2">
+          <span class="topic-numeral">III</span>
+          <p class="topic-tile-name">Client Success Stories</p>
+        </div>
+        <div class="topic-tile reveal reveal-delay-3">
+          <span class="topic-numeral">IV</span>
+          <p class="topic-tile-name">Leadership Philosophy</p>
+        </div>
+        <div class="topic-tile reveal">
+          <span class="topic-numeral">V</span>
+          <p class="topic-tile-name">Industry Trends</p>
+        </div>
+        <div class="topic-tile reveal reveal-delay-1">
+          <span class="topic-numeral">VI</span>
+          <p class="topic-tile-name">Business Lessons</p>
+        </div>
+        <div class="topic-tile reveal reveal-delay-2">
+          <span class="topic-numeral">VII</span>
+          <p class="topic-tile-name">Frequently Asked Questions</p>
+        </div>
+        <div class="topic-tile reveal reveal-delay-3">
+          <span class="topic-numeral">VIII</span>
+          <p class="topic-tile-name">Process &amp; Methodology</p>
+        </div>
+        <div class="topic-tile reveal">
+          <span class="topic-numeral">IX</span>
+          <p class="topic-tile-name">Community Expertise</p>
+        </div>
+        <div class="topic-tile reveal reveal-delay-1">
+          <span class="topic-numeral">X</span>
+          <p class="topic-tile-name">Future Vision</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="copper-rule"></div>
+
+  <!-- CLOSING -->
+  <section class="closing">
+    <div class="container">
+      <div class="copper-rule-short" style="margin: 0 auto 44px;"></div>
+
+      <p class="closing-copy reveal">
+        "If you've been thinking about documenting your expertise but haven't known where to start — this is a structured way to build authority without adding more to your plate. The goal is to create a platform that captures your knowledge, positions you as a thought leader in your industry, and builds a compounding asset that works for you long after the recording ends."
+      </p>
+
+      <div class="closing-lockup reveal reveal-delay-1">
+        <span class="corner-tr"></span>
+        <span class="corner-bl"></span>
+        <p class="closing-lockup-text">Capture. Build. Convert.</p>
+        <p class="closing-lockup-sub">Authority Starts Here</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <div class="copper-rule"></div>
+  <footer>
+    <div class="container">
+      <span class="footer-wordmark">Daily Grind Media</span>
+      <p class="footer-copy">Stay On That Daily Grind</p>
+    </div>
+  </footer>
+
+  <script>
+    const revealEls = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    revealEls.forEach(el => observer.observe(el));
+
+    window.addEventListener('load', () => {
+      revealEls.forEach(el => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight) {
+          el.classList.add('visible');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
