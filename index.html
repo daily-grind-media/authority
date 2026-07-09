@@ -1272,6 +1272,73 @@
       height: 100%;
       overflow: visible;
     }
+    /* ── NEW: 3-Month Commitment Callout ── */
+    .commitment-callout {
+      margin: 20px 0 24px;
+      border: 1px solid rgba(187,114,90,0.45);
+      background: rgba(187,114,90,0.04);
+      padding: 20px 22px;
+      position: relative;
+    }
+    .commitment-callout::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--copper), transparent);
+      opacity: 0.6;
+    }
+    .commitment-callout-label {
+      display: block;
+      font-family: var(--font-condensed);
+      font-size: 9px; letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--copper);
+      margin-bottom: 10px;
+    }
+    .commitment-callout-body {
+      font-family: var(--font-body);
+      font-size: 13.5px; font-weight: 300;
+      color: #999; line-height: 1.8; letter-spacing: 0.01em;
+    }
+
+    /* ── NEW: Why This Is Different Panel ── */
+    .why-different-panel {
+      margin: 0 0 24px;
+      border: 1px solid var(--border-mid);
+      background: #0E0E0E;
+      padding: 24px 24px 20px;
+      position: relative;
+    }
+    .why-different-label {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 18px; letter-spacing: 0.06em;
+      color: var(--white);
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(187,114,90,0.15);
+    }
+    .why-different-body {
+      font-family: var(--font-body);
+      font-size: 13.5px; font-weight: 300;
+      color: #888; line-height: 1.85; letter-spacing: 0.01em;
+      margin-bottom: 10px;
+    }
+    .why-different-body:last-child { margin-bottom: 0; }
+
+    /* ── NEW: System Pull Quote ── */
+    .system-pull-quote {
+      margin-top: 28px;
+      padding: 18px 20px;
+      border-left: 1px solid rgba(187,114,90,0.4);
+      display: flex; gap: 14px; align-items: baseline;
+    }
+    .system-pull-quote-text {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 16px; color: #999; line-height: 1.7;
+    }
+
+    /* ── Flywheel axiom mark (reused) ── */
   </style>
 </head>
 <body>
@@ -1373,7 +1440,7 @@
         <div class="ecosystem-grid">
           <div class="ecosystem-item">
             <span class="ecosystem-item-label">Video</span>
-            <p class="ecosystem-item-title">5 Talking Head Reels</p>
+            <p class="ecosystem-item-title">5 Premium Short Form Reels</p>
           </div>
           <div class="ecosystem-item">
             <span class="ecosystem-item-label">Education</span>
@@ -1433,6 +1500,7 @@
             <li>Audio mastering</li>
             <li>Professional color grading</li>
             <li>Fully edited podcast episode</li>
+            <li>5 Premium Short Form Reels</li>
             <li>Video delivery</li>
             <li>Audio-only delivery</li>
             <li>Ready for YouTube, Spotify, Apple Podcasts, and social distribution</li>
@@ -1601,9 +1669,26 @@
               <p class="ladder-title">Client Acquisition</p>
               <div style="text-align:right">
                 <div class="ladder-price">$2,500<sub>&nbsp;launch</sub></div>
-                <span class="ladder-price-note">$1,500 / month partnership</span>
+                <span class="ladder-price-note">$1,500 / month</span>
               </div>
             </div>
+
+            <!-- 3-Month Commitment Callout -->
+            <div class="commitment-callout">
+              <span class="commitment-callout-label">3-Month Minimum Commitment</span>
+              <p class="commitment-callout-body">A three-month engagement is required to allow sufficient time for strategy, creative testing, campaign optimization, and meaningful performance data. Building a predictable client acquisition system requires consistent iteration and refinement — not a single campaign launch.</p>
+            </div>
+
+            <!-- Why This Is Different -->
+            <div class="why-different-panel">
+              <span class="why-different-label">Why This Is Different</span>
+              <p class="why-different-body">Most client acquisition companies sell software, funnels, or ad management as individual services.</p>
+              <p class="why-different-body">Daily Grind Media delivers a fully integrated client acquisition system where strategy, creative production, content, advertising, landing pages, CRM automation, and ongoing optimization are all managed by one team.</p>
+              <p class="why-different-body">Because we produce the media, build the system, and continuously optimize performance together, every part of the client journey works in sync — creating a more consistent brand experience and a stronger foundation for long-term growth.</p>
+              <p class="why-different-body">Our in-house production studio allows us to continually create premium ad creatives, testimonials, authority content, and marketing assets that evolve alongside your campaigns, rather than relying on outdated content or disconnected vendors.</p>
+              <p class="why-different-body" style="margin-top:14px;"><strong style="color:#C8C4BE;font-weight:400;">This isn't simply a funnel.</strong> It's a complete marketing and client acquisition ecosystem designed to grow with your business.</p>
+            </div>
+
             <p class="ladder-positioning-sub">For those ready to convert authority and attention into a predictable, organized client acquisition channel.</p>
             <div class="ladder-divider"></div>
 
@@ -1658,6 +1743,13 @@
               <span class="ladder-outcome-label">Outcome</span>
               <p class="ladder-outcome-text">Your authority becomes a predictable client acquisition channel — through <em>strategic automation, intelligent follow-up, and a conversion system built to close.</em></p>
             </div>
+
+            <!-- Pull Quote -->
+            <div class="system-pull-quote">
+              <span class="flywheel-axiom-mark">—</span>
+              <span class="system-pull-quote-text">"Most agencies manage campaigns. We build the complete system behind them."</span>
+            </div>
+
           </div>
         </div>
 
